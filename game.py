@@ -1,27 +1,44 @@
-# Объявить класс.
-class Board:
-    # Инициализировать игровое поле - список списков с пробелами.
-    # Пробелы - это пустые клетки.
-    def __init__(self):
-        self.board = [[" " for _ in range(3)] for _ in range(3)]
-
-    # Метод, который обрабатывает ходы игроков.
-    def make_move(self, row, col, player):
-        self.board[row][col] = player
-
-    # Метод, который отрисовывает игровое поле.
-    def display(self):
-        for row in self.board:
-            print("|".join(row))
-            print("-" * 5)
+from gameparts import Board
+from gameparts.exceptions import FieldIndexError
 
 
-# Создать игровое поле - объект класса Board.
-game = Board()
-# Отрисовать поле в терминале.
-game.display()
-# Разместить на поле символ по указанным координатам - сделать ход.
-game.make_move(0, 2, "X")
-print("Ход сделан!")
-# Перерисовать поле с учётом сделанного хода.
-game.display()
+def main():
+    game = Board()
+    game.display()
+
+
+# Запускается бесконечный цикл.
+    while True:
+        # В этом блоке содержатся значения, которые могут вызвать исключение.
+        try:
+            # Ползователь вводит номер строки.
+            row = int(input('Введите номер строки: '))
+            # Если введенное число меньше 0 или больше
+            # или равно field_size...
+            if row < 0 or row >= game.field_size:
+                # ... и выбразывается собственное исключение FieldIndexError
+                raise FieldIndexError
+            column = int(input('Введите номер столбца: '))
+            if column < 0 or column >= game.field_size:
+                raise FieldIndexError
+        except FieldIndexError:
+            print(
+                'Значение добжно быть неотрицательным и меньше '
+                f' {game.field_size}.'
+            )
+            print('Пожалуйста, введите значение для строки и столбца заново')
+            continue
+        except ValueError:
+            print('Буквы вводить нельзя, только цифры')
+            print('Пожалуйста, введите значение для строки и столбца заново')
+        else:
+            break
+
+    game.make_move(0, 2, 'X')
+    print('Ход сделан!')
+    # Перерисовать поле с учётом сделанного хода.
+    game.display()
+
+
+if __name__ == '__main__':
+    main()
